@@ -1,0 +1,56 @@
+--Create new warehouse and database
+create or replace warehouse snowpipe_etl_project;
+create or replace Database snowpipe_db;
+use snowpipe_db;
+create or replace schema snowpipe_sh;
+
+--Create Storage Integration
+create storage integration snowpipe_storage_integration
+    type = external_stage
+    storage_provider = s3
+    storage_aws_role_arn = '<your-arn-role>'
+    enabled = true
+    storage_allowed_locations = ('s3://your-bucket-name/');
+
+desc integration snowpipe_storage_integration;
+
+--Create File Format
+create or replace FILE FORMAT F_data
+TYPE = CSV;
+
+--Create table
+create or replace table regulations(
+    RegulationID varchar,
+    RegulationName varchar,
+    Description varchar,
+    Category varchar,
+    EffectiveDate date,
+    ExpirationDate date
+);
+
+--Create s3 external stage
+create or replace stage snowpipe_s3_raw_data
+URL = 's3://your-bucket-name/foldername/'
+Storage_integration = snowpipe_storage_integration;
+
+show stages;
+
+--Create a snowpipe for automate data ingestion from s3 to snowflake
+create or replace pipe P_regulations
+auto_ingest = true
+AS
+Copy into snowpipe_sh.regulations FROM @snowpipe_s3_raw_data
+file_format = (type = csv compression = none skip_header = 1)
+on_error = 'continue';
+
+--to create event notification
+desc pipe p_regulations;
+
+
+--See if the data loaded 
+select * from regulations;
+
+--If you don't see the data refresh the snowpipe
+Alter pipe <pipe_name> refresh;
+
+
