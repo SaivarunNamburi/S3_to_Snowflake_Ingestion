@@ -4,10 +4,14 @@
 
 This project aims to automate the process of ingesting data from an AWS S3 bucket into Snowflake using Snowpipe. By leveraging Snowpipe, data ingestion becomes a seamless, near real-time process, enabling timely insights for analytical purposes.
 
+I have also provided the SQL scripts to create storage integration and snowpipe to run it seamlessly without any interputtions
+Note. Modify the 'arn details' and 's3 details' while using the script
+
 ## Prerequisites:
 
 1. **AWS IAM user account** with appropriate permissions to access the desired S3 bucket.
-   - Create an IAM role and configure permissions. Refer to [[AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)]
+   - Create an IAM user and configure permissions. I have provided s3 full access permission for the user. 
+        Refer to [[AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)]
    - Create an S3 bucket to store the data.
 
 2. **Snowflake account** with sufficient privileges to configure storage integrations, stages, and pipes.
@@ -16,11 +20,11 @@ This project aims to automate the process of ingesting data from an AWS S3 bucke
 ## Steps:
 
 1. **Set up AWS IAM Roles and Permissions:**
-   - Create an IAM role with the necessary permissions to access the S3 bucket.
+   - Create an IAM role with the necessary permissions to access the S3 bucket. I have give S3 Full access
    - Configure policies to grant access to required S3 resources.
 
 2. **Configure Snowflake Storage Integration:**
-   - Create a storage integration in Snowflake to connect with the AWS IAM role.
+   - Create a storage integration in Snowflake to connect with the AWS IAM role. You can find the script in the txt file provided above
    - Specify the IAM role ARN and the allowed S3 bucket locations.
 
 3. **Create File Formats and Tables:**
